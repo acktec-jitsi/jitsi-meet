@@ -26,7 +26,8 @@ import {
     IconRaisedHand,
     IconRec,
     IconShareAudio,
-    IconShareDesktop
+    IconShareDesktop,
+    IconEdit
 } from '../../../base/icons';
 import JitsiMeetJS from '../../../base/lib-jitsi-meet';
 import {
@@ -244,7 +245,11 @@ type Props = {
     /**
      * Invoked to obtain translated strings.
      */
-    t: Function
+    t: Function,
+     /**
+     * Invoked to obtain _whiteboard strings.
+     */
+    _whiteboard: boolean,	
 };
 
 declare var APP: Object;
@@ -291,6 +296,10 @@ class Toolbox extends Component<Props> {
         this._onToolbarOpenLocalRecordingInfoDialog = this._onToolbarOpenLocalRecordingInfoDialog.bind(this);
         this._onShortcutToggleTileView = this._onShortcutToggleTileView.bind(this);
         this._onEscKey = this._onEscKey.bind(this);
+        this._onTogglerWhiteBoard = this._onTogglerWhiteBoard.bind(this);	
+        this.state = {	
+            _whiteboard: false
+        };
     }
 
     /**
@@ -1017,6 +1026,29 @@ class Toolbox extends Component<Props> {
     _isProfileVisible() {
         return !this.props._isProfileDisabled && this.props._shouldShowButton('profile');
     }
+        /**	
+     * Displays the toolbar.	
+     *	
+     */	
+     _onTogglerWhiteBoard: () => void;	
+     /**	
+    * Displays the toolbar.	
+    *	
+    * @private	
+    * @returns {void}	
+    */	
+     _onTogglerWhiteBoard() {	
+         const slideEl = document.getElementById('white-board');	
+         if (slideEl.classList.contains('slide-left') === true) {	
+             APP.conference._whiteboard = false;	
+             this.setState({ _whiteboard: false });	
+             APP.conference._openWhiteboard('close');	
+         } else {	
+             this.setState({ _whiteboard: true });	
+             APP.conference._whiteboard = true;	
+             APP.conference._openWhiteboard('open');	
+         }	
+     }
 
     /**
      * Renders the list elements of the overflow menu.
@@ -1085,6 +1117,12 @@ class Toolbox extends Component<Props> {
                 && <LiveStreamButton
                     key = 'livestreaming'
                     showLabel = { true } />
+            && <OverflowMenuItem	
+                accessibilityLabel = { t('Open whiteboard') }	
+                icon = { this.state._whiteboard ? IconEdit : IconEdit }	
+                key = 'whiteboard'	
+                onClick = { this._onTogglerWhiteBoard }	
+                text = { this.state._whiteboard ? t('Whiteboard') : t('Whiteboard') } />,
         ];
 
         const group2 = [

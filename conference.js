@@ -179,7 +179,15 @@ const commands = {
     EMAIL: EMAIL_COMMAND,
     ETHERPAD: 'etherpad'
 };
-
+function parseJSONSafely(str) {
+    try {
+        return JSON.parse(str);
+    } catch (e) {
+        // console.err(e);
+        // Return a default object, or null based on use case.
+        return 'false';
+    }
+}
 /**
  * Open Connection. When authentication failed it shows auth dialog.
  * @param roomName the room name to use
@@ -2197,7 +2205,28 @@ export default {
         room.on(JitsiConferenceEvents.PARTICIPANT_KICKED, (kicker, kicked) => {
             APP.store.dispatch(participantKicked(kicker, kicked));
         });
+        room.on(JitsiConferenceEvents.MESSAGE_RECEIVED, (id, text) => {
+            // alert();
+            const messageObj = parseJSONSafely(text);
+             if (messageObj !== 'false') {
+                const messageObj = JSON.parse(text);
 
+                console.log(messageObj);
+
+
+                if (messageObj.EventType === 1) {
+                    const slideEl = document.getElementById('white-board');
+
+                    APP.conference._whiteboard = true;
+                    slideEl.classList.add('slide-left');
+                } else if (messageObj.EventType === 2) {
+                    const slideEl = document.getElementById('white-board');
+
+                    APP.conference._whiteboard = false;
+                    slideEl.classList.remove('slide-left');
+                }
+            }
+        });
         room.on(JitsiConferenceEvents.SUSPEND_DETECTED, () => {
             APP.store.dispatch(suspendDetected());
         });
@@ -3105,5 +3134,22 @@ export default {
         }
 
         this._proxyConnection = null;
-    }
+    },
+    _openWhiteboard(action)
+    { 
+        var localParticipantIDs = getLocalParticipant(APP.store.getState());
+        var localParticipantIDs = localParticipantIDs.id;
+        let conntrolMessage = new Object();
+
+        if(action== 'open') {
+               conntrolMessage.EventType = 1;
+        } else {
+               conntrolMessage.EventType = 2;
+        }
+        conntrolMessage.userID = this.getMyUserId();
+        conntrolMessage.Message = 'open board!!';
+        conntrolMessage.FromParticipantID = localParticipantIDs;
+        let message = JSON.stringify( conntrolMessage );
+        room.sendTextMessage(message);
+    },
 };

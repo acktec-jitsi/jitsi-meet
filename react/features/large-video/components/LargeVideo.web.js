@@ -8,7 +8,7 @@ import { setColorAlpha } from '../../base/util';
 import { fetchCustomBrandingData } from '../../dynamic-branding';
 import { SharedVideo } from '../../shared-video/components/web';
 import { Captions } from '../../subtitles/';
-
+import Iframe from 'react-iframe';
 declare var interfaceConfig: Object;
 
 type Props = {
@@ -82,7 +82,18 @@ class LargeVideo extends Component<Props> {
                 style = { style }>
                 <SharedVideo />
                 <div id = 'etherpad' />
-
+                <div
+                    className = 'white-board'
+                    id = 'white-board'>
+                    <Iframe
+                        allowFullScreen = { true }
+                        display = 'initial'
+                        height = '100%'
+                        id = 'myId'
+                        position = 'relative'
+                        url = { 'https://meet.ourtrial.com/whiteboard/'+APP.conference.roomName+'-MainBoard-'+Math.random()}
+                        width = '100%' />
+                </div>
                 <Watermarks />
 
                 <div id = 'dominantSpeaker'>

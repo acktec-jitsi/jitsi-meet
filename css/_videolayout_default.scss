@@ -724,3 +724,36 @@
     white-space: nowrap;
     width: 100%;
 }
+.white-board {
+    z-index: 25;
+    position: absolute;
+    overflow: hidden;
+    top: -15000px;
+    height: 90%;
+    width: 100%;
+    background: #ffffff82;
+    height:calc(100vh - 120px);
+    width:calc(100% - 190px);
+    right: 50px;
+
+  }
+
+  .slide-left{
+    -webkit-animation: slide 0.5s forwards;
+    -webkit-animation-delay: 0.5s;
+    animation: slide 0.5s forwards;
+    animation-delay: 0.5s;
+  }
+
+
+@-webkit-keyframes slide {
+  100% {
+    top: 0;
+  }
+}
+
+@keyframes slide {
+  100% {
+    top: 0;
+  }
+}
