@@ -85,6 +85,21 @@ class LargeVideo extends Component<Props> {
                 <div
                     className = 'white-board'
                     id = 'white-board'>
+                    <div className="whiteboard-list dropdown">
+                      Main Board
+                      <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAA50lEQVRoge3YzQqCQABF4dMbWhQt6umLoOjnBQpsYRdCZsTKcUa6H7gb5R5cKZiZmZmZfWgFXIADUGXeEjIHjsANWMcOzYAzUL+ue9fhDNY0m7TvSrM56PR2sKSYdkRNszVqEbghd0wo4k6ztdMycOMD2KZa2mEV2bLp+4ASYn6OkJwxg0VIjpjBI2TMmGQRMkZM8ghJGTNahKSIGT1ChozJFiFDxGSPkF9iiomQb2KKi5BPYoqNkD4xxUdIV8xkIiT27VDaN04voTczmTfRFouZVIS0YyYZIRWwB3aU+XvJzMzMzP7JE9nJ7S6cU2ClAAAAAElFTkSuQmCC' />
+                      <div class="dropdown-content">
+                        <ul>
+                            <li className="active">Whiteboard 1</li>
+                            <li>Whiteboard 2</li>
+                            <li>Whiteboard 3</li>
+                            <li>Whiteboard 4</li>
+                            <li>
+                                <button className="btn">Add New Board</button>
+                            </li>
+                        </ul>
+                      </div>
+                    </div>
                     <Iframe
                         allowFullScreen = { true }
                         display = 'initial'
