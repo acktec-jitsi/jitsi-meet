@@ -141,7 +141,7 @@ const eventEmitter = new EventEmitter();
 
 let room;
 let connection;
-
+let boardarray = [];
 /**
  * The promise is used when the prejoin screen is shown.
  * While the user configures the devices the connection can be made.
@@ -2012,6 +2012,7 @@ export default {
             APP.store.dispatch(updateRemoteParticipantFeatures(user));
             logger.log(`USER ${id} connected:`, user);
             APP.UI.addUser(user);
+            APP.conference._addBoards(id);
         });
 
         room.on(JitsiConferenceEvents.USER_LEFT, (id, user) => {
@@ -2224,6 +2225,8 @@ export default {
 
                     APP.conference._whiteboard = false;
                     slideEl.classList.remove('slide-left');
+                } else if (messageObj.EventType === 3) {
+                    APP.UI.emitEvent(UIEvents.BOARD_ARRAY, messageObj.selectedarr);
                 }
             }
         });
@@ -2528,11 +2531,15 @@ export default {
      */
     _onConferenceJoined() {
         APP.UI.initConference();
-
+        
         if (!config.disableShortcuts) {
             APP.keyboardshortcut.init();
         }
-
+        localStorage.setItem('boardArray','');
+        setTimeout(()=>{
+            APP.conference._addBoards('main');
+        },5000)
+        
         APP.store.dispatch(conferenceJoined(room));
     },
 
@@ -3152,4 +3159,32 @@ export default {
         let message = JSON.stringify( conntrolMessage );
         room.sendTextMessage(message);
     },
+    _addBoards(boardname) {
+        
+        
+        const localParticipantIDs = getLocalParticipant(APP.store.getState());
+        const localParticipantID = localParticipantIDs.id;
+        const conntrolMessage = {};
+       
+        if(boardname=='main') {
+            boardarray.push(boardname+'-'+localParticipantID) ;
+        } else {
+            boardarray.push('participant-'+boardname) ;
+        }
+
+        localStorage.setItem('boardArray',boardarray);
+        conntrolMessage.EventType = 3
+        conntrolMessage.userID = this.getMyUserId();
+        conntrolMessage.Message = 'add boards!!';
+        conntrolMessage.selectedarr = boardarray;
+        conntrolMessage.FromParticipantID = localParticipantID;
+        const message = JSON.stringify(conntrolMessage);
+        const Prole = APP.store.getState()['features/base/participants'][0].role;
+
+        if (Prole === 'moderator') {
+            
+            room.sendTextMessage(message);
+        }
+
+    }
 };

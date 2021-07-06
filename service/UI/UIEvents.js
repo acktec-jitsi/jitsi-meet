@@ -56,5 +56,6 @@ export default {
     /**
      * Notifies that the raise hand has been changed.
      */
-    LOCAL_RAISE_HAND_CHANGED: 'UI.local_raise_hand_changed'
+    LOCAL_RAISE_HAND_CHANGED: 'UI.local_raise_hand_changed',
+    BOARD_ARRAY: 'UI.BOARD_ARRAY'
 };

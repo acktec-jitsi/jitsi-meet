@@ -9,6 +9,7 @@ import { fetchCustomBrandingData } from '../../dynamic-branding';
 import { SharedVideo } from '../../shared-video/components/web';
 import { Captions } from '../../subtitles/';
 import Iframe from 'react-iframe';
+import UIEvents from '../../../../service/UI/UIEvents';
 declare var interfaceConfig: Object;
 
 type Props = {
@@ -57,8 +58,142 @@ class LargeVideo extends Component<Props> {
      *
      * @inheritdoc
      */
+     constructor(props) {
+        super(props);
+        this.state = {
+          //   items: [
+          //     {id: 1, name: 'Mountains',desc:'Lorem ipsum dolor..',image_src:'../images/tool_images/mountains.jpg',category:'Edge Case'},
+          //     {id: 2, name: 'Lights',desc:'Lorem ipsum dolor..',image_src:'../images/tool_images/lights.jpg',category:'Edge Case'},
+          //     {id: 3, name: 'Forest',desc:'Lorem ipsum dolor..',image_src:'../images/tool_images/nature.jpg',category:'Edge Case'},
+          //     {id: 4, name: 'Retro',desc:'Lorem ipsum dolor..',image_src:'../images/tool_images/cars1.jpg',category:'cars'},
+          //     {id: 5, name: 'Fast',desc:'Lorem ipsum dolor..',image_src:'../images/tool_images/cars2.jpg',category:'cars'},
+          //     {id: 6, name: 'Classic',desc:'Lorem ipsum dolor..',image_src:'../images/tool_images/cars3.jpg',category:'cars'},
+          //     {id: 7, name: 'Girl',desc:'Lorem ipsum dolor..',image_src:'../images/tool_images/people1.jpg',category:'Nature'},
+          //     {id: 8, name: 'Man',desc:'Lorem ipsum dolor..',image_src:'../images/tool_images/people2.jpg',category:'people'},
+          //     {id: 9, name: 'Woman',desc:'Lorem ipsum dolor..',image_src:'../images/tool_images/people3.jpg',category:'people'},
+          // ],
+          selecteitems: [],
+          users:[]
+        };
+    }
     componentDidMount() {
+        if(this._isvisible()) {
+            // var btnContainer = document.getElementById("myBtnContainer");
+            // var btns = btnContainer.getElementsByClassName("btn");
+            // for (var i = 0; i < btns.length; i++) {
+            //     btns[i].addEventListener("click", function(){
+            //         var current = document.getElementsByClassName("active");
+            //         current[0].className = current[0].className.replace(" active", "");
+            //         this.className += " active";
+            //     });
+            // }
+            // this.filterSelection('all');
+            // this.getCategory();
+            // this.getImages();
+        }
+        APP.UI.addListener(UIEvents.BOARD_ARRAY, (messageObj) => { 
+            console.log(messageObj);
+            this.setState({selecteitems:messageObj});
+            this.setState({users:APP.store.getState()['features/base/participants']});
+                
+        });
+        // if(APP.conference._room !== undefined) {
+        //     APP.conference._room.addCommandListener(
+        //     '_boardsArray',
+        //     ({ value, attributes }, id) => {
+        //         alert('here');
+        //         console.log(JSON.parse(value));
+        //     // if(!APP.conference.isLocalId(id)) {
+        //         this.setState({selecteitems:value});
+        //         //}
+            
+        //     }
+        //     );
+        // }
+        // if(APP.conference._room !== undefined) {
+        //     APP.conference._room.on('conference.messageReceived', (id, text) => {
+        //              alert();
+               
+        //     });
+        // }
         this.props._fetchCustomBrandingData();
+    }
+    _isvisible() {
+        const Prole = APP.store.getState()['features/base/participants'][0].role;
+  
+        return Prole === 'moderator';
+    }
+    renderItemIframes = (item, index) => {
+        console.log("itemitemitemitemitemitem");
+        console.log(this._isvisible());
+        if(APP.store.getState()['features/base/participants'][0].role == "moderator") {
+            console.log('moderator');
+            return (
+                <Iframe
+                key={item}
+                allowFullScreen = { true }
+                display = 'initial'
+                height = '100%'
+                id = {'myId'+item}
+                position = 'relative'
+                url = { 'https://meet.ourtrial.com/whiteboard/'+item}
+                width = '100%' />
+            )
+        } else {
+            console.log('participant');
+            console.log(item+' ->>>>>participant-'+APP.conference.getMyUserId());
+            if(item.includes('main')) {
+                return (
+                    <Iframe
+                    key={item}
+                    allowFullScreen = { true }
+                    display = 'initial'
+                    height = '100%'
+                    id = {'myId'+item}
+                    position = 'relative'
+                    url = { 'https://meet.ourtrial.com/whiteboard/'+item}
+                    width = '100%' />
+                )
+            } else if(item == 'participant-'+APP.conference.getMyUserId()){
+                console.log('participant');
+               
+                return (
+                    <Iframe
+                    key={item}
+                    allowFullScreen = { true }
+                    display = 'initial'
+                    height = '100%'
+                    id = {'myId'+item}
+                    position = 'relative'
+                    url = { 'https://meet.ourtrial.com/whiteboard/'+item}
+                    width = '100%' />
+                )
+            } else {
+                return null;
+            }
+        }
+       
+      }
+    renderItemdropdown = (item, index) => {
+        var splitname = item.split("-");
+        //console.log(APP.conference._room.participants[splitname[1]]._displayName)
+       
+        if(item.includes('main')) {
+            return <li data-id={item} className={'changeboard'}>Main Board</li>
+        } else {
+            console.log(splitname);
+            var name = APP.conference.getParticipantDisplayName(splitname[1]);
+            console.log(name);
+            if(APP.store.getState()['features/base/participants'][0].role == "moderator") {
+                return <li data-id={item} className={'changeboard'}>{name}</li>
+            } else {
+                if(item == 'participant-'+APP.conference.getMyUserId()){
+                    return <li data-id={item} className={'changeboard'}>My Board</li>
+                }
+            }
+            
+        }
+        
     }
 
     /**
@@ -88,26 +223,31 @@ class LargeVideo extends Component<Props> {
                     <div className="whiteboard-list dropdown">
                       Main Board
                       <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAA50lEQVRoge3YzQqCQABF4dMbWhQt6umLoOjnBQpsYRdCZsTKcUa6H7gb5R5cKZiZmZmZfWgFXIADUGXeEjIHjsANWMcOzYAzUL+ue9fhDNY0m7TvSrM56PR2sKSYdkRNszVqEbghd0wo4k6ztdMycOMD2KZa2mEV2bLp+4ASYn6OkJwxg0VIjpjBI2TMmGQRMkZM8ghJGTNahKSIGT1ChozJFiFDxGSPkF9iiomQb2KKi5BPYoqNkD4xxUdIV8xkIiT27VDaN04voTczmTfRFouZVIS0YyYZIRWwB3aU+XvJzMzMzP7JE9nJ7S6cU2ClAAAAAElFTkSuQmCC' />
-                      <div class="dropdown-content">
+                      <div className="dropdown-content">
                         <ul>
-                            <li className="active">Whiteboard 1</li>
+                        {APP.store.getState()['features/base/participants'].map((data) =>{
+
+                        })}
+                        {this.state.selecteitems.map(this.renderItemdropdown)}
+                            {/* <li className="active">Whiteboard 1</li>
                             <li>Whiteboard 2</li>
                             <li>Whiteboard 3</li>
-                            <li>Whiteboard 4</li>
+                            <li>Whiteboard 4</li> */}
                             <li>
                                 <button className="btn">Add New Board</button>
                             </li>
                         </ul>
                       </div>
                     </div>
-                    <Iframe
+                    {/* <Iframe
                         allowFullScreen = { true }
                         display = 'initial'
                         height = '100%'
                         id = 'myId'
                         position = 'relative'
-                        url = { 'https://meet.ourtrial.com/whiteboard/'+APP.conference.roomName+'-MainBoard-'+Math.random()}
-                        width = '100%' />
+                        url = { 'https://meet.ourtrial.com/whiteboard/'+APP.conference.roomName+'-MainBoard1'}
+                        width = '100%' /> */}
+                    {this.state.selecteitems.map(this.renderItemIframes)}
                 </div>
                 <Watermarks />
 
