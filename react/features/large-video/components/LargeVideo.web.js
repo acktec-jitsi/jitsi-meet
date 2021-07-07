@@ -104,7 +104,7 @@ class LargeVideo extends Component<Props> {
             this.setState({selecteitems:messageObj});
             this.setState({users:APP.store.getState()['features/base/participants']});
             setTimeout(()=>{
-              this.reload_iframes();
+             // this.reload_iframes();
             },2000)
             
 
@@ -150,7 +150,7 @@ class LargeVideo extends Component<Props> {
                 height = '100%'
                 id = {'myId-'+splitname[1]}
                 position = 'relative'
-                url = { 'https://meet.ourtrial.com/whiteboard/'+item}
+                url = ''
                 width = '100%' />
             )
         } else {
@@ -166,7 +166,7 @@ class LargeVideo extends Component<Props> {
                     height = '100%'
                     id = {'myId-'+splitname[1]}
                     position = 'relative'
-                    url = { 'https://meet.ourtrial.com/whiteboard/'+item}
+                    url = ''
                     width = '100%' />
                 )
             } else if(item == 'participant-'+APP.conference.getMyUserId()){
@@ -181,7 +181,7 @@ class LargeVideo extends Component<Props> {
                     height = '100%'
                     id = {'myId-'+splitname[1]}
                     position = 'relative'
-                    url = { 'https://meet.ourtrial.com/whiteboard/'+item}
+                    url = ''
                     width = '100%' />
                 )
             } 
@@ -215,9 +215,9 @@ class LargeVideo extends Component<Props> {
         var splitname = d.split("-");
         var dn = e.target.getAttribute("data-name");
         $('#white-board').children('iframe').hide();
+        APP.conference.loadIframe('myId-'+splitname[1],'https://meet.ourtrial.com/whiteboard/'+d);
         $('#myId-'+splitname[1]).show();
         this.setState({selectedBoard:dn})
-        this.reload_iframes();
     }
     addMainBoard = (e) => {
         APP.conference._addBoards('main');

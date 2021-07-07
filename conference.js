@@ -2220,7 +2220,7 @@ export default {
 
                     APP.conference._whiteboard = true;
                     slideEl.classList.add('slide-left');
-                    APP.conference.reload_iframes();
+                  //  APP.conference.reload_iframes();
                 } else if (messageObj.EventType === 2) {
                     const slideEl = document.getElementById('white-board');
 
@@ -3194,5 +3194,13 @@ export default {
         for (var i = 0, f; f = f_list[i]; i++) {
             f.src = f.src;
         }
+    },
+    loadIframe(iframeName, url) {
+        var $iframe = $('#' + iframeName);
+        if ($iframe.length) {
+            $iframe.attr('src',url);
+            return false;
+        }
+        return true;
     }
 };
