@@ -73,7 +73,8 @@ class LargeVideo extends Component<Props> {
           //     {id: 9, name: 'Woman',desc:'Lorem ipsum dolor..',image_src:'../images/tool_images/people3.jpg',category:'people'},
           // ],
           selecteitems: [],
-          users:[]
+          users:[],
+          selectedBoard:"Main Board"
         };
     }
     componentDidMount() {
@@ -126,6 +127,7 @@ class LargeVideo extends Component<Props> {
     renderItemIframes = (item, index) => {
         console.log("itemitemitemitemitemitem");
         console.log(this._isvisible());
+        var splitname = item.split("-");
         if(APP.store.getState()['features/base/participants'][0].role == "moderator") {
             console.log('moderator');
             return (
@@ -134,7 +136,7 @@ class LargeVideo extends Component<Props> {
                 allowFullScreen = { true }
                 display = 'initial'
                 height = '100%'
-                id = {'myId'+item}
+                id = {'myId-'+splitname[1]}
                 position = 'relative'
                 url = { 'https://meet.ourtrial.com/whiteboard/'+item}
                 width = '100%' />
@@ -145,11 +147,12 @@ class LargeVideo extends Component<Props> {
             if(item.includes('main')) {
                 return (
                     <Iframe
+                    styles={{display:'none'}}
                     key={item}
                     allowFullScreen = { true }
                     display = 'initial'
                     height = '100%'
-                    id = {'myId'+item}
+                    id = {'myId-'+splitname[1]}
                     position = 'relative'
                     url = { 'https://meet.ourtrial.com/whiteboard/'+item}
                     width = '100%' />
@@ -159,11 +162,12 @@ class LargeVideo extends Component<Props> {
                
                 return (
                     <Iframe
+                    styles={{display:'none'}}
                     key={item}
                     allowFullScreen = { true }
                     display = 'initial'
                     height = '100%'
-                    id = {'myId'+item}
+                    id = {'myId-'+splitname[1]}
                     position = 'relative'
                     url = { 'https://meet.ourtrial.com/whiteboard/'+item}
                     width = '100%' />
@@ -174,26 +178,38 @@ class LargeVideo extends Component<Props> {
         }
        
       }
-    renderItemdropdown = (item, index) => {
+      renderItemdropdown = (item, index) => {
         var splitname = item.split("-");
         //console.log(APP.conference._room.participants[splitname[1]]._displayName)
        
         if(item.includes('main')) {
-            return <li data-id={item} className={'changeboard'}>Main Board</li>
+            return <li data-id={item} data-name={'Main Board'} onClick={this.selectBoard} className={'changeboard'}>Main Board</li>
         } else {
             console.log(splitname);
             var name = APP.conference.getParticipantDisplayName(splitname[1]);
             console.log(name);
             if(APP.store.getState()['features/base/participants'][0].role == "moderator") {
-                return <li data-id={item} className={'changeboard'}>{name}</li>
+                return <li data-id={item} data-name={name} onClick={this.selectBoard} className={'changeboard'}>{name}</li>
             } else {
                 if(item == 'participant-'+APP.conference.getMyUserId()){
-                    return <li data-id={item} className={'changeboard'}>My Board</li>
+                    return <li data-id={item} data-name={"My Board"} onClick={this.selectBoard} className={'changeboard'}>My Board</li>
                 }
             }
             
         }
         
+    }
+    selectBoard = (e) => {
+        console.log(e.target.getAttribute("data-id"));
+        var d = e.target.getAttribute("data-id");
+        var splitname = d.split("-");
+        var dn = e.target.getAttribute("data-name");
+        $('#white-board').children('iframe').hide();
+        $('#myId-'+splitname[1]).show();
+        this.setState({selectedBoard:dn})
+    }
+    addMainBoard = (e) => {
+        APP.conference._addBoards('main');
     }
 
     /**
@@ -221,7 +237,7 @@ class LargeVideo extends Component<Props> {
                     className = 'white-board'
                     id = 'white-board'>
                     <div className="whiteboard-list dropdown">
-                      Main Board
+                     {this.state.selectedBoard}
                       <img src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAABmJLR0QA/wD/AP+gvaeTAAAA50lEQVRoge3YzQqCQABF4dMbWhQt6umLoOjnBQpsYRdCZsTKcUa6H7gb5R5cKZiZmZmZfWgFXIADUGXeEjIHjsANWMcOzYAzUL+ue9fhDNY0m7TvSrM56PR2sKSYdkRNszVqEbghd0wo4k6ztdMycOMD2KZa2mEV2bLp+4ASYn6OkJwxg0VIjpjBI2TMmGQRMkZM8ghJGTNahKSIGT1ChozJFiFDxGSPkF9iiomQb2KKi5BPYoqNkD4xxUdIV8xkIiT27VDaN04voTczmTfRFouZVIS0YyYZIRWwB3aU+XvJzMzMzP7JE9nJ7S6cU2ClAAAAAElFTkSuQmCC' />
                       <div className="dropdown-content">
                         <ul>
@@ -234,7 +250,7 @@ class LargeVideo extends Component<Props> {
                             <li>Whiteboard 3</li>
                             <li>Whiteboard 4</li> */}
                             <li>
-                                <button className="btn">Add New Board</button>
+                                <button onClick={this.addMainBoard} className="btn">Add New Board</button>
                             </li>
                         </ul>
                       </div>
