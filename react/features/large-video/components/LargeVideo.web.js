@@ -77,6 +77,13 @@ class LargeVideo extends Component<Props> {
           selectedBoard:"Main Board"
         };
     }
+    reload_iframes() {
+        var f_list = document.getElementsByTagName('iframe');
+     
+        for (var i = 0, f; f = f_list[i]; i++) {
+            f.src = f.src;
+        }
+    }
     componentDidMount() {
         if(this._isvisible()) {
             // var btnContainer = document.getElementById("myBtnContainer");
@@ -96,6 +103,11 @@ class LargeVideo extends Component<Props> {
             console.log(messageObj);
             this.setState({selecteitems:messageObj});
             this.setState({users:APP.store.getState()['features/base/participants']});
+            setTimeout(()=>{
+              this.reload_iframes();
+            },2000)
+            
+
                 
         });
         // if(APP.conference._room !== undefined) {
@@ -172,12 +184,10 @@ class LargeVideo extends Component<Props> {
                     url = { 'https://meet.ourtrial.com/whiteboard/'+item}
                     width = '100%' />
                 )
-            } else {
-                return null;
-            }
+            } 
         }
-       
-      }
+        //$('#myId-'+splitname[1]).attr('src', $('#myId-'+splitname[1]).attr('src'));
+    }
       renderItemdropdown = (item, index) => {
         var splitname = item.split("-");
         //console.log(APP.conference._room.participants[splitname[1]]._displayName)
@@ -207,6 +217,7 @@ class LargeVideo extends Component<Props> {
         $('#white-board').children('iframe').hide();
         $('#myId-'+splitname[1]).show();
         this.setState({selectedBoard:dn})
+        this.reload_iframes();
     }
     addMainBoard = (e) => {
         APP.conference._addBoards('main');

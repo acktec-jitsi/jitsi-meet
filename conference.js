@@ -2220,6 +2220,7 @@ export default {
 
                     APP.conference._whiteboard = true;
                     slideEl.classList.add('slide-left');
+                    APP.conference.reload_iframes();
                 } else if (messageObj.EventType === 2) {
                     const slideEl = document.getElementById('white-board');
 
@@ -3186,5 +3187,12 @@ export default {
             room.sendTextMessage(message);
         }
 
+    },
+    reload_iframes() {
+        var f_list = document.getElementsByTagName('iframe');
+     
+        for (var i = 0, f; f = f_list[i]; i++) {
+            f.src = f.src;
+        }
     }
 };
