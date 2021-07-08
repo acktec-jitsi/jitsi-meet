@@ -130,7 +130,9 @@ class LargeVideo extends Component<Props> {
         //     });
         // }
         this.props._fetchCustomBrandingData();
+       
     }
+
     _isvisible() {
         const Prole = APP.store.getState()['features/base/participants'][0].role;
   
@@ -144,13 +146,14 @@ class LargeVideo extends Component<Props> {
             console.log('moderator');
             return (
                 <Iframe
+                className="whiteboardframe"
                 key={item}
                 allowFullScreen = { true }
                 display = 'initial'
                 height = '100%'
                 id = {'myId-'+splitname[1]}
                 position = 'relative'
-                url = {'https://meet.ourtrial.com/whiteboard/'+item}
+                url = {'http://127.0.0.1:9002/whiteboard/'+item}
                 width = '100%' />
             )
         } else {
@@ -159,6 +162,7 @@ class LargeVideo extends Component<Props> {
             if(item.includes('main')) {
                 return (
                     <Iframe
+                    className="whiteboardframe"
                     styles={{display:'none'}}
                     key={item}
                     allowFullScreen = { true }
@@ -166,7 +170,7 @@ class LargeVideo extends Component<Props> {
                     height = '100%'
                     id = {'myId-'+splitname[1]}
                     position = 'relative'
-                    url = {'https://meet.ourtrial.com/whiteboard/'+item}
+                    url = {'http://127.0.0.1:9002/whiteboard/'+item}
                     width = '100%' />
                 )
             } else if(item == 'participant-'+APP.conference.getMyUserId()){
@@ -174,6 +178,7 @@ class LargeVideo extends Component<Props> {
                
                 return (
                     <Iframe
+                    className="whiteboardframe"
                     styles={{display:'none'}}
                     key={item}
                     allowFullScreen = { true }
@@ -181,7 +186,7 @@ class LargeVideo extends Component<Props> {
                     height = '100%'
                     id = {'myId-'+splitname[1]}
                     position = 'relative'
-                    url = {'https://meet.ourtrial.com/whiteboard/'+item}
+                    url = {'http://127.0.0.1:9002/whiteboard/'+item}
                     width = '100%' />
                 )
             } 

@@ -169,7 +169,13 @@ window.JitsiMeetScreenObtainer = {
         APP.store.dispatch(showDesktopPicker(options, onSourceChoose));
     }
 };
-
+window.addEventListener('message',event => {
+    var data = event.data;
+    if(data.method === "collab") {
+        APP.conference._stopCollab(data);
+    }
+    //console.log(data);
+  });
 /**
  * Known custom conference commands.
  */
@@ -2228,6 +2234,24 @@ export default {
                     slideEl.classList.remove('slide-left');
                 } else if (messageObj.EventType === 3) {
                     APP.UI.emitEvent(UIEvents.BOARD_ARRAY, messageObj.selectedarr);
+                } else if (messageObj.EventType === 4) {
+                    console.log(messageObj);
+                    var localParticipantIDs = getLocalParticipant(APP.store.getState());
+                    var localParticipantIDs = localParticipantIDs.id;
+                    if(messageObj.userID != localParticipantIDs) {
+                        if(messageObj.data.board) {
+                            document.getElementById(messageObj.data.room).style.pointerEvents = "";      
+                        } else {
+                            document.getElementById(messageObj.data.room).style.pointerEvents = "none";
+                        }
+                        const frame = document.getElementById(messageObj.data.room);
+                        frame.contentWindow.postMessage(messageObj.data)
+                    }
+                   
+                   
+                    
+                    //iframeAPP.contentWindow.document.getElementById("MainToolBox").style.display = 'none'; 
+                   
                 }
             }
         });
@@ -3202,5 +3226,18 @@ export default {
             return false;
         }
         return true;
-    }
+    },
+    _stopCollab(data)
+    { 
+        var localParticipantIDs = getLocalParticipant(APP.store.getState());
+        var localParticipantIDs = localParticipantIDs.id;
+        let conntrolMessage = new Object();
+        conntrolMessage.EventType = 4;
+        conntrolMessage.data = data;
+        conntrolMessage.userID = this.getMyUserId();
+        conntrolMessage.Message = 'stop/start Collab!!';
+        conntrolMessage.FromParticipantID = localParticipantIDs;
+        let message = JSON.stringify( conntrolMessage );
+        room.sendTextMessage(message);
+    },
 };
