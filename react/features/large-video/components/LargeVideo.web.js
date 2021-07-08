@@ -150,7 +150,7 @@ class LargeVideo extends Component<Props> {
                 height = '100%'
                 id = {'myId-'+splitname[1]}
                 position = 'relative'
-                url = ''
+                url = {'https://meet.ourtrial.com/whiteboard/'+item}
                 width = '100%' />
             )
         } else {
@@ -166,7 +166,7 @@ class LargeVideo extends Component<Props> {
                     height = '100%'
                     id = {'myId-'+splitname[1]}
                     position = 'relative'
-                    url = ''
+                    url = {'https://meet.ourtrial.com/whiteboard/'+item}
                     width = '100%' />
                 )
             } else if(item == 'participant-'+APP.conference.getMyUserId()){
@@ -181,7 +181,7 @@ class LargeVideo extends Component<Props> {
                     height = '100%'
                     id = {'myId-'+splitname[1]}
                     position = 'relative'
-                    url = ''
+                    url = {'https://meet.ourtrial.com/whiteboard/'+item}
                     width = '100%' />
                 )
             } 
@@ -215,7 +215,7 @@ class LargeVideo extends Component<Props> {
         var splitname = d.split("-");
         var dn = e.target.getAttribute("data-name");
         $('#white-board').children('iframe').hide();
-        APP.conference.loadIframe('myId-'+splitname[1],'https://meet.ourtrial.com/whiteboard/'+d);
+        //APP.conference.loadIframe('myId-'+splitname[1],'https://meet.ourtrial.com/whiteboard/'+d);
         $('#myId-'+splitname[1]).show();
         this.setState({selectedBoard:dn})
     }
