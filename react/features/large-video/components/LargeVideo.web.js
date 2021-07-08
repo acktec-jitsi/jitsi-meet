@@ -153,7 +153,7 @@ class LargeVideo extends Component<Props> {
                 height = '100%'
                 id = {'myId-'+splitname[1]}
                 position = 'relative'
-                url = {'http://127.0.0.1:9002/whiteboard/'+item}
+                url = {'https://meet.ourtrial.com/whiteboard/'+item}
                 width = '100%' />
             )
         } else {
@@ -170,7 +170,7 @@ class LargeVideo extends Component<Props> {
                     height = '100%'
                     id = {'myId-'+splitname[1]}
                     position = 'relative'
-                    url = {'http://127.0.0.1:9002/whiteboard/'+item}
+                    url = {'https://meet.ourtrial.com/whiteboard/'+item}
                     width = '100%' />
                 )
             } else if(item == 'participant-'+APP.conference.getMyUserId()){
@@ -186,7 +186,7 @@ class LargeVideo extends Component<Props> {
                     height = '100%'
                     id = {'myId-'+splitname[1]}
                     position = 'relative'
-                    url = {'http://127.0.0.1:9002/whiteboard/'+item}
+                    url = {'https://meet.ourtrial.com/whiteboard/'+item}
                     width = '100%' />
                 )
             } 
