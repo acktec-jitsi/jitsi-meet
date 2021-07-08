@@ -1278,7 +1278,31 @@ class Toolbox extends Component<Props> {
                     onClick = { this._onToolbarToggleChat }
                     text = { t(`toolbar.${_chatOpen ? 'closeChat' : 'openChat'}`) } />);
         }
-
+        if (this.props._shouldShowButton('raisehand')) {
+            //const raisedHand = this.props._raisedHand || false;
+            if(APP.store.getState()['features/base/participants'][0].role == "moderator") {
+            buttons.has('raisehand')
+                ? mainMenuAdditionalButtons.push(<ToolbarButton
+                    accessibilityLabel = { t('Whiteboard') }
+                    icon = { this.state._whiteboard ? IconEdit : IconEdit }	
+                    key = 'whiteboard'	
+                    onClick = { this._onTogglerWhiteBoard }	
+                    toggled = { this.state._whiteboard }
+                    tooltip = { t(`${this.state._whiteboard  ?  t('Whiteboard') : t('Whiteboard')}`) } />)
+                 : overflowMenuAdditionalButtons.push(<OverflowMenuItem
+                    accessibilityLabel = { t('Whiteboard') }
+                    icon = { IconRaisedHand }
+                    key = 'raisehand'
+                    onClick = { this._onToolbarToggleRaiseHand }
+                    text = { t(`${this.state._whiteboard  ?  t('Whiteboard') : t('Whiteboard')}`) } />);
+            }
+        }
+        // <ToolbarButton	
+        //         accessibilityLabel = { t('Open whiteboard') }	
+        //         icon = { this.state._whiteboard ? IconEdit : IconEdit }	
+        //         key = 'whiteboard'	
+        //         onClick = { this._onTogglerWhiteBoard }	
+        //         text = { this.state._whiteboard ? t('Whiteboard') : t('Whiteboard') } />
         if (this.props._shouldShowButton('raisehand')) {
             const raisedHand = this.props._raisedHand || false;
 

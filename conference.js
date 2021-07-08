@@ -3184,7 +3184,7 @@ export default {
         let message = JSON.stringify( conntrolMessage );
         room.sendTextMessage(message);
     },
-    _addBoards(boardname) {
+    _addBoards(boardname,secondMain=null) {
         
         
         const localParticipantIDs = getLocalParticipant(APP.store.getState());
@@ -3192,7 +3192,12 @@ export default {
         const conntrolMessage = {};
        
         if(boardname=='main') {
-            boardarray.push(boardname+'-'+localParticipantID) ;
+            if(boardname === 'addnewMain') {
+                boardarray.push(boardname+'-'+localParticipantID+'-NewMain') ;
+            } else {
+                boardarray.push(boardname+'-'+localParticipantID) ;
+            }
+            
         } else {
             boardarray.push('participant-'+boardname) ;
         }

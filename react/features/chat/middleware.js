@@ -45,7 +45,16 @@ declare var interfaceConfig : Object;
  * message after we have received a private message in the last 20 seconds.
  */
 const PRIVACY_NOTICE_TIMEOUT = 20 * 1000;
-
+function parseJSONSafely(str) {
+    try {
+       return JSON.parse(str);
+    }
+    catch (e) {
+       //console.err(e);
+       // Return a default object, or null based on use case.
+       return 'false'
+    }
+ }
 /**
  * Implements the middleware of the chat feature.
  *
@@ -255,7 +264,7 @@ function _handleReceivedMessage({ dispatch, getState }, { id, message, privateMe
     const { isOpen: isChatOpen } = state['features/chat'];
 
     if (!isChatOpen) {
-        dispatch(playSound(INCOMING_MSG_SOUND_ID));
+       // dispatch(playSound(INCOMING_MSG_SOUND_ID));
     }
 
     // Provide a default for for the case when a message is being
@@ -266,17 +275,22 @@ function _handleReceivedMessage({ dispatch, getState }, { id, message, privateMe
     const hasRead = participant.local || isChatOpen;
     const timestampToDate = timestamp ? new Date(timestamp) : new Date();
     const millisecondsTimestamp = timestampToDate.getTime();
+    let messageObj = parseJSONSafely(message);
+    if(messageObj=='false')
+    {
+        dispatch(addMessage({
+            displayName,
+            hasRead,
+            id,
+            messageType: participant.local ? MESSAGE_TYPE_LOCAL : MESSAGE_TYPE_REMOTE,
+            message,
+            privateMessage,
+            recipient: getParticipantDisplayName(state, localParticipant.id),
+            timestamp: millisecondsTimestamp
+        }));
+    }
 
-    dispatch(addMessage({
-        displayName,
-        hasRead,
-        id,
-        messageType: participant.local ? MESSAGE_TYPE_LOCAL : MESSAGE_TYPE_REMOTE,
-        message,
-        privateMessage,
-        recipient: getParticipantDisplayName(state, localParticipant.id),
-        timestamp: millisecondsTimestamp
-    }));
+   
 
     if (typeof APP !== 'undefined') {
         // Logic for web only:

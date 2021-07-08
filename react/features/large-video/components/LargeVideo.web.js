@@ -225,7 +225,7 @@ class LargeVideo extends Component<Props> {
         this.setState({selectedBoard:dn})
     }
     addMainBoard = (e) => {
-        APP.conference._addBoards('main');
+        APP.conference._addBoards('main','addnewMain');
     }
 
     /**
@@ -266,7 +266,10 @@ class LargeVideo extends Component<Props> {
                             <li>Whiteboard 3</li>
                             <li>Whiteboard 4</li> */}
                             <li>
+                            {APP.store.getState()['features/base/participants'][0].role == "moderator" && 
                                 <button onClick={this.addMainBoard} className="btn">Add New Board</button>
+                            }
+                             
                             </li>
                         </ul>
                       </div>
