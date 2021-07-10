@@ -297,6 +297,7 @@ class Toolbox extends Component<Props> {
         this._onShortcutToggleTileView = this._onShortcutToggleTileView.bind(this);
         this._onEscKey = this._onEscKey.bind(this);
         this._onTogglerWhiteBoard = this._onTogglerWhiteBoard.bind(this);	
+        this._onTogglerWhiteBoardP = this._onTogglerWhiteBoardP.bind(this);
         this.state = {	
             _whiteboard: false
         };
@@ -1050,6 +1051,33 @@ class Toolbox extends Component<Props> {
          }	
      }
 
+          /**	
+     * Displays the toolbar.	
+     *	
+     */	
+     _onTogglerWhiteBoardP: () => void;	
+     /**	
+    * Displays the toolbar.	
+    *	
+    * @private	
+    * @returns {void}	
+    */	
+     _onTogglerWhiteBoardP() {	
+         const slideEl = document.getElementById('white-board');	
+         if (slideEl.classList.contains('slide-left') === true) {	
+             APP.conference._whiteboard = false;	
+             this.setState({ _whiteboard: false });	
+             slideEl.classList.remove('slide-left');
+             
+             //APP.conference._openWhiteboard('close');	
+         } else {	
+             this.setState({ _whiteboard: true });	
+             APP.conference._whiteboard = true;	
+             slideEl.classList.add('slide-left');
+             //APP.conference._openWhiteboard('open');	
+         }	
+     }
+
     /**
      * Renders the list elements of the overflow menu.
      *
@@ -1117,12 +1145,12 @@ class Toolbox extends Component<Props> {
                 && <LiveStreamButton
                     key = 'livestreaming'
                     showLabel = { true } />
-            && <OverflowMenuItem	
-                accessibilityLabel = { t('Open whiteboard') }	
-                icon = { this.state._whiteboard ? IconEdit : IconEdit }	
-                key = 'whiteboard'	
-                onClick = { this._onTogglerWhiteBoard }	
-                text = { this.state._whiteboard ? t('Whiteboard') : t('Whiteboard') } />,
+            // && <OverflowMenuItem	
+            //     accessibilityLabel = { t('Open whiteboard') }	
+            //     icon = { this.state._whiteboard ? IconEdit : IconEdit }	
+            //     key = 'whiteboard'	
+            //     onClick = { this._onTogglerWhiteBoard }	
+            //     text = { this.state._whiteboard ? t('Whiteboard') : t('Whiteboard') } />,
         ];
 
         const group2 = [
@@ -1295,6 +1323,21 @@ class Toolbox extends Component<Props> {
                     key = 'raisehand'
                     onClick = { this._onToolbarToggleRaiseHand }
                     text = { t(`${this.state._whiteboard  ?  t('Whiteboard') : t('Whiteboard')}`) } />);
+            } else {
+                    buttons.has('raisehand')
+                    ? mainMenuAdditionalButtons.push(<ToolbarButton
+                        accessibilityLabel = { t('Whiteboard') }
+                        icon = { this.state._whiteboard ? IconEdit : IconEdit }	
+                        key = 'whiteboard'	
+                        onClick = { this._onTogglerWhiteBoardP }	
+                        toggled = { this.state._whiteboard }
+                        tooltip = { t(`${this.state._whiteboard  ?  t('Whiteboard') : t('Whiteboard')}`) } />)
+                    : overflowMenuAdditionalButtons.push(<OverflowMenuItem
+                        accessibilityLabel = { t('Whiteboard') }
+                        icon = { IconRaisedHand }
+                        key = 'raisehand'
+                        onClick = { this._onToolbarToggleRaiseHandP }
+                        text = { t(`${this.state._whiteboard  ?  t('Whiteboard') : t('Whiteboard')}`) } />);
             }
         }
         // <ToolbarButton	

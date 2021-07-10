@@ -138,7 +138,7 @@ import UIEvents from './service/UI/UIEvents';
 const logger = Logger.getLogger(__filename);
 
 const eventEmitter = new EventEmitter();
-
+var Board = (interfaceConfig.Borad_url) ? interfaceConfig.Borad_url : 'http://127.0.0.1:9002/whiteboard/';
 let room;
 let connection;
 let boardarray = [];
@@ -2045,7 +2045,7 @@ export default {
         room.on(JitsiConferenceEvents.USER_ROLE_CHANGED, (id, role) => {
             if (this.isLocalId(id)) {
                 logger.info(`My role changed, new role: ${role}`);
-
+                
                 APP.store.dispatch(localParticipantRoleChanged(role));
                 APP.API.notifyUserRoleChanged(id, role);
             } else {
@@ -2236,6 +2236,13 @@ export default {
                     APP.UI.emitEvent(UIEvents.BOARD_ARRAY, messageObj.selectedarr);
                 } else if (messageObj.EventType === 4) {
                     console.log(messageObj);
+                    var frame2 = document.getElementById(messageObj.data.room);
+                    console.log(frame2);
+                    const Prole = APP.store.getState()['features/base/participants'][0].role;
+                   
+                    if (Prole !== 'moderator') {
+                       // frame2.contentWindow.postMessage(messageObj.data,"http://127.0.0.1:9002/");
+                    }
                     var localParticipantIDs = getLocalParticipant(APP.store.getState());
                     var localParticipantIDs = localParticipantIDs.id;
                     if(messageObj.userID != localParticipantIDs) {
@@ -2244,8 +2251,8 @@ export default {
                         } else {
                             document.getElementById(messageObj.data.room).style.pointerEvents = "none";
                         }
-                        const frame = document.getElementById(messageObj.data.room);
-                        frame.contentWindow.postMessage(messageObj.data)
+                        
+                        //frame.contentWindow.postMessage(messageObj.data)
                     }
                    
                    
@@ -3169,6 +3176,7 @@ export default {
     },
     _openWhiteboard(action)
     { 
+       
         var localParticipantIDs = getLocalParticipant(APP.store.getState());
         var localParticipantIDs = localParticipantIDs.id;
         let conntrolMessage = new Object();
@@ -3183,25 +3191,55 @@ export default {
         conntrolMessage.FromParticipantID = localParticipantIDs;
         let message = JSON.stringify( conntrolMessage );
         room.sendTextMessage(message);
+        
     },
-    _addBoards(boardname,secondMain=null) {
+    _addBoards(boardname,secondMain=null,number=null) {
         
         
         const localParticipantIDs = getLocalParticipant(APP.store.getState());
         const localParticipantID = localParticipantIDs.id;
         const conntrolMessage = {};
-       
+        var BB;
+        
         if(boardname=='main') {
-            if(boardname === 'addnewMain') {
-                boardarray.push(boardname+'-'+localParticipantID+'-NewMain') ;
+            if(secondMain == 'addnewMain') {
+                BB = localParticipantID+'-'+number;
+                boardarray.push(boardname+'-'+localParticipantID+'-'+number) ;
             } else {
+                BB = localParticipantID;
                 boardarray.push(boardname+'-'+localParticipantID) ;
             }
             
         } else {
+            BB = boardname;
             boardarray.push('participant-'+boardname) ;
         }
-
+        const Prole = APP.store.getState()['features/base/participants'][0].role;
+        var pushed= [];
+        if (Prole === 'moderator') {
+            setInterval(()=>{
+                
+                var frame = document.getElementById('myId-'+BB);
+                if(frame.contentWindow !== null){
+                    var dd = {
+                        method:'showButton'
+                    }
+                   // if (pushed.indexOf(BB) === -1) {
+                        console.log('here');
+                        frame.contentWindow.postMessage(dd,Board);
+                        var p = {
+                            method:'Role',
+                            isModerator:true
+                        }
+                        //frame.contentWindow.postMessage(p,"http://127.0.0.1:9002/");
+                        pushed.push(BB) ;
+                    //}
+                }
+                
+            },2000)
+           
+           
+        }
         localStorage.setItem('boardArray',boardarray);
         conntrolMessage.EventType = 3
         conntrolMessage.userID = this.getMyUserId();
@@ -3209,7 +3247,7 @@ export default {
         conntrolMessage.selectedarr = boardarray;
         conntrolMessage.FromParticipantID = localParticipantID;
         const message = JSON.stringify(conntrolMessage);
-        const Prole = APP.store.getState()['features/base/participants'][0].role;
+        
 
         if (Prole === 'moderator') {
             

@@ -11,6 +11,7 @@ import { Captions } from '../../subtitles/';
 import Iframe from 'react-iframe';
 import UIEvents from '../../../../service/UI/UIEvents';
 declare var interfaceConfig: Object;
+var Board = (interfaceConfig.Borad_url) ? interfaceConfig.Borad_url : 'http://127.0.0.1:9002/whiteboard/';
 
 type Props = {
 
@@ -74,7 +75,8 @@ class LargeVideo extends Component<Props> {
           // ],
           selecteitems: [],
           users:[],
-          selectedBoard:"Main Board"
+          selectedBoard:"Main Board",
+          totalMain:1
         };
     }
     reload_iframes() {
@@ -103,9 +105,7 @@ class LargeVideo extends Component<Props> {
             console.log(messageObj);
             this.setState({selecteitems:messageObj});
             this.setState({users:APP.store.getState()['features/base/participants']});
-            setTimeout(()=>{
-             // this.reload_iframes();
-            },2000)
+          
             
 
                 
@@ -139,10 +139,16 @@ class LargeVideo extends Component<Props> {
         return Prole === 'moderator';
     }
     renderItemIframes = (item, index) => {
+      
         console.log("itemitemitemitemitemitem");
         console.log(this._isvisible());
         var splitname = item.split("-");
+        var c = '';
+        if(splitname[2] !== undefined){
+            c = '-'+splitname[2];
+        }
         if(APP.store.getState()['features/base/participants'][0].role == "moderator") {
+           
             console.log('moderator');
             return (
                 <Iframe
@@ -151,9 +157,9 @@ class LargeVideo extends Component<Props> {
                 allowFullScreen = { true }
                 display = 'initial'
                 height = '100%'
-                id = {'myId-'+splitname[1]}
+                id = {'myId-'+splitname[1]+c}
                 position = 'relative'
-                url = {'https://meet.ourtrial.com/whiteboard/'+item}
+                url = {Board+item}
                 width = '100%' />
             )
         } else {
@@ -170,7 +176,7 @@ class LargeVideo extends Component<Props> {
                     height = '100%'
                     id = {'myId-'+splitname[1]}
                     position = 'relative'
-                    url = {'https://meet.ourtrial.com/whiteboard/'+item}
+                    url = {Board+item}
                     width = '100%' />
                 )
             } else if(item == 'participant-'+APP.conference.getMyUserId()){
@@ -186,7 +192,7 @@ class LargeVideo extends Component<Props> {
                     height = '100%'
                     id = {'myId-'+splitname[1]}
                     position = 'relative'
-                    url = {'https://meet.ourtrial.com/whiteboard/'+item}
+                    url = {Board+item}
                     width = '100%' />
                 )
             } 
@@ -198,7 +204,13 @@ class LargeVideo extends Component<Props> {
         //console.log(APP.conference._room.participants[splitname[1]]._displayName)
        
         if(item.includes('main')) {
-            return <li data-id={item} data-name={'Main Board'} onClick={this.selectBoard} className={'changeboard'}>Main Board</li>
+            var itemN = item.split("-");
+            if(itemN[2] !== undefined){
+                return <li data-id={item} data-name={'Main Board '+itemN[2]} onClick={this.selectBoard} className={'changeboard'}>{ 'Main Board-'+itemN[2]} </li>
+            } else{
+                return <li data-id={item} data-name={'Main Board'} onClick={this.selectBoard} className={'changeboard'}>Main Board</li>
+            }
+            
         } else {
             console.log(splitname);
             var name = APP.conference.getParticipantDisplayName(splitname[1]);
@@ -221,11 +233,17 @@ class LargeVideo extends Component<Props> {
         var dn = e.target.getAttribute("data-name");
         $('#white-board').children('iframe').hide();
         //APP.conference.loadIframe('myId-'+splitname[1],'https://meet.ourtrial.com/whiteboard/'+d);
-        $('#myId-'+splitname[1]).show();
+        if(splitname[2]!==undefined){
+            $('#myId-'+splitname[1]+'-'+splitname[2]).show();
+        } else {
+            $('#myId-'+splitname[1]).show();
+        }
+        
         this.setState({selectedBoard:dn})
     }
     addMainBoard = (e) => {
-        APP.conference._addBoards('main','addnewMain');
+        this.setState({totalMain:this.state.totalMain+1});
+        APP.conference._addBoards('main','addnewMain',this.state.totalMain);
     }
 
     /**
