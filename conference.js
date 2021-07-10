@@ -138,7 +138,7 @@ import UIEvents from './service/UI/UIEvents';
 const logger = Logger.getLogger(__filename);
 
 const eventEmitter = new EventEmitter();
-var Board = (interfaceConfig.Borad_url) ? interfaceConfig.Borad_url : 'http://127.0.0.1:9002/whiteboard/';
+var Board = (interfaceConfig.Borad_url) ? interfaceConfig.Borad_url : 'https://meet.ourtrial.com/';
 let room;
 let connection;
 let boardarray = [];
