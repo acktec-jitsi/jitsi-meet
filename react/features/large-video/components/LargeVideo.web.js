@@ -11,7 +11,7 @@ import { Captions } from '../../subtitles/';
 import Iframe from 'react-iframe';
 import UIEvents from '../../../../service/UI/UIEvents';
 declare var interfaceConfig: Object;
-var Board = (interfaceConfig.Borad_url) ? interfaceConfig.Borad_url : 'http://127.0.0.1:9002/whiteboard/';
+var Board = (interfaceConfig.Borad_url) ? interfaceConfig.Borad_url : 'https://meet.ourtrial.com/whiteboard/';
 
 type Props = {
 
@@ -174,7 +174,7 @@ class LargeVideo extends Component<Props> {
                     allowFullScreen = { true }
                     display = 'initial'
                     height = '100%'
-                    id = {'myId-'+splitname[1]}
+                    id = {'myId-'+splitname[1]+c}
                     position = 'relative'
                     url = {Board+item}
                     width = '100%' />
