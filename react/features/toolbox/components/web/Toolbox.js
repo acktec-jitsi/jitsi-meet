@@ -27,7 +27,8 @@ import {
     IconRec,
     IconShareAudio,
     IconShareDesktop,
-    IconEdit
+    IconEdit,
+    IconWhiteBoard
 } from '../../../base/icons';
 import JitsiMeetJS from '../../../base/lib-jitsi-meet';
 import {
@@ -1312,7 +1313,7 @@ class Toolbox extends Component<Props> {
             buttons.has('raisehand')
                 ? mainMenuAdditionalButtons.push(<ToolbarButton
                     accessibilityLabel = { t('Whiteboard') }
-                    icon = { this.state._whiteboard ? IconEdit : IconEdit }	
+                    icon = { this.state._whiteboard ? IconWhiteBoard : IconWhiteBoard }	
                     key = 'whiteboard'	
                     onClick = { this._onTogglerWhiteBoard }	
                     toggled = { this.state._whiteboard }
@@ -1327,7 +1328,7 @@ class Toolbox extends Component<Props> {
                     buttons.has('raisehand')
                     ? mainMenuAdditionalButtons.push(<ToolbarButton
                         accessibilityLabel = { t('Whiteboard') }
-                        icon = { this.state._whiteboard ? IconEdit : IconEdit }	
+                        icon = { this.state._whiteboard ? IconWhiteBoard : IconWhiteBoard }	
                         key = 'whiteboard'	
                         onClick = { this._onTogglerWhiteBoardP }	
                         toggled = { this.state._whiteboard }

@@ -732,9 +732,9 @@
     height: 90%;
     width: 100%;
     background: #ffffff82;
-    height:calc(100vh - 120px);
-    width:calc(100% - 190px);
-    right: 50px;
+    height:calc(100vh - 105px);
+    width:calc(100% - 165px);
+    left: 15px;
     iframe {
         border: none
     }
@@ -826,12 +826,12 @@
 
 @-webkit-keyframes slide {
   100% {
-    top: 0;
+    top: 15px;
   }
 }
 
 @keyframes slide {
   100% {
-    top: 0;
+    top: 15px;
   }
 }
