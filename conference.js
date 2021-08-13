@@ -2222,13 +2222,23 @@ export default {
 
 
                 if (messageObj.EventType === 1) {
-                    const slideEl = document.getElementById('white-board');
+                    var slideEl = document.getElementById('white-board');
+                    if(window.matchMedia('screen and (max-width: 769px)').matches){
+                        slideEl = document.getElementById('white-board-small-screen');
+                    }else{
+                        slideEl = document.getElementById('white-board');
+                    }
 
                     APP.conference._whiteboard = true;
                     slideEl.classList.add('slide-left');
                   //  APP.conference.reload_iframes();
                 } else if (messageObj.EventType === 2) {
-                    const slideEl = document.getElementById('white-board');
+                    var slideEl = document.getElementById('white-board');
+                    if(window.matchMedia('screen and (max-width: 769px)').matches){
+                        slideEl = document.getElementById('white-board-small-screen');
+                    }else{
+                        slideEl = document.getElementById('white-board');
+                    }
 
                     APP.conference._whiteboard = false;
                     slideEl.classList.remove('slide-left');
