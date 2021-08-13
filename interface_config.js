@@ -285,7 +285,7 @@ var interfaceConfig = {
     // prevent fear when commenting out the last value.
     // eslint-disable-next-line sort-keys
     makeJsonParserHappy: 'even if last key had a trailing comma',
-    Borad_url:'https://meet.ourtrial.com/whiteboard/'
+    Borad_url:'https://meet2-board.acktechnologies.com/whiteboard/'
 
     // No configuration value should follow this line.
 };
