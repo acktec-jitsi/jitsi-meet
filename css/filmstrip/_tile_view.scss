@@ -59,6 +59,12 @@
         }
     }
 
+    @media screen and (max-width: 600px){
+        div.filmstrip{
+            top: -15%;
+        }
+      }
+
     /**
      * Regardless of the user setting, do not let the filmstrip be in a hidden
      * state.
