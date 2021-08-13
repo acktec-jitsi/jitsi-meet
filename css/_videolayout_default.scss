@@ -735,6 +735,9 @@
     height:calc(100vh - 105px);
     width:calc(100% - 165px);
     left: 15px;
+    @media (max-width: 600px) {
+        width: calc(100% - 32px);
+    }
     iframe {
         border: none
     }
@@ -816,15 +819,15 @@
     }
   }
 
-  @media screen and (max-width: 600px){
-    div.white-board{
-        width: calc(100% - 32px);
-    }
+//   @media screen and (max-width: 600px){
+//     div.white-board{
+//         width: calc(100% - 32px);
+//     }
     // div.whiteboard-list{
     //     width: 100px;
     //     right: 0px;
     // }
-  }
+//   }
 
   .slide-left{
     -webkit-animation: slide 0.5s forwards;
