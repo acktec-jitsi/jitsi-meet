@@ -138,10 +138,11 @@ import UIEvents from './service/UI/UIEvents';
 const logger = Logger.getLogger(__filename);
 
 const eventEmitter = new EventEmitter();
-var Board = (interfaceConfig.Borad_url) ? interfaceConfig.Borad_url : 'https://meet2-board.acktechnologies.com/';
+const Board = interfaceConfig.Borad_url ? interfaceConfig.Borad_url : 'https://meet2-board.acktechnologies.com/';
 let room;
 let connection;
-let boardarray = [];
+const boardarray = [];
+
 /**
  * The promise is used when the prejoin screen is shown.
  * While the user configures the devices the connection can be made.
@@ -169,13 +170,16 @@ window.JitsiMeetScreenObtainer = {
         APP.store.dispatch(showDesktopPicker(options, onSourceChoose));
     }
 };
-window.addEventListener('message',event => {
-    var data = event.data;
-    if(data.method === "collab") {
+window.addEventListener('message', event => {
+    const data = event.data;
+
+    if (data.method === 'collab') {
         APP.conference._stopCollab(data);
     }
-    //console.log(data);
-  });
+
+    // console.log(data);
+});
+
 /**
  * Known custom conference commands.
  */
@@ -185,6 +189,7 @@ const commands = {
     EMAIL: EMAIL_COMMAND,
     ETHERPAD: 'etherpad'
 };
+
 function parseJSONSafely(str) {
     try {
         return JSON.parse(str);
@@ -194,6 +199,7 @@ function parseJSONSafely(str) {
         return 'false';
     }
 }
+
 /**
  * Open Connection. When authentication failed it shows auth dialog.
  * @param roomName the room name to use
@@ -2045,7 +2051,7 @@ export default {
         room.on(JitsiConferenceEvents.USER_ROLE_CHANGED, (id, role) => {
             if (this.isLocalId(id)) {
                 logger.info(`My role changed, new role: ${role}`);
-                
+
                 APP.store.dispatch(localParticipantRoleChanged(role));
                 APP.API.notifyUserRoleChanged(id, role);
             } else {
@@ -2215,7 +2221,8 @@ export default {
         room.on(JitsiConferenceEvents.MESSAGE_RECEIVED, (id, text) => {
             // alert();
             const messageObj = parseJSONSafely(text);
-             if (messageObj !== 'false') {
+
+            if (messageObj !== 'false') {
                 const messageObj = JSON.parse(text);
 
                 console.log(messageObj);
@@ -2226,7 +2233,8 @@ export default {
 
                     APP.conference._whiteboard = true;
                     slideEl.classList.add('slide-left');
-                  //  APP.conference.reload_iframes();
+
+                    //  APP.conference.reload_iframes();
                 } else if (messageObj.EventType === 2) {
                     const slideEl = document.getElementById('white-board');
 
@@ -2236,29 +2244,30 @@ export default {
                     APP.UI.emitEvent(UIEvents.BOARD_ARRAY, messageObj.selectedarr);
                 } else if (messageObj.EventType === 4) {
                     console.log(messageObj);
-                    var frame2 = document.getElementById(messageObj.data.room);
+                    const frame2 = document.getElementById(messageObj.data.room);
+
                     console.log(frame2);
                     const Prole = APP.store.getState()['features/base/participants'][0].role;
-                   
+
                     if (Prole !== 'moderator') {
-                       // frame2.contentWindow.postMessage(messageObj.data,"http://127.0.0.1:9002/");
+                        // frame2.contentWindow.postMessage(messageObj.data,"http://127.0.0.1:9002/");
                     }
                     var localParticipantIDs = getLocalParticipant(APP.store.getState());
                     var localParticipantIDs = localParticipantIDs.id;
-                    if(messageObj.userID != localParticipantIDs) {
-                        if(messageObj.data.board) {
-                            document.getElementById(messageObj.data.room).style.pointerEvents = "";      
+
+                    if (messageObj.userID != localParticipantIDs) {
+                        if (messageObj.data.board) {
+                            document.getElementById(messageObj.data.room).style.pointerEvents = '';
                         } else {
-                            document.getElementById(messageObj.data.room).style.pointerEvents = "none";
+                            document.getElementById(messageObj.data.room).style.pointerEvents = 'none';
                         }
-                        
-                        //frame.contentWindow.postMessage(messageObj.data)
+
+                        // frame.contentWindow.postMessage(messageObj.data)
                     }
-                   
-                   
-                    
-                    //iframeAPP.contentWindow.document.getElementById("MainToolBox").style.display = 'none'; 
-                   
+
+
+                    // iframeAPP.contentWindow.document.getElementById("MainToolBox").style.display = 'none';
+
                 }
             }
         });
@@ -2563,15 +2572,15 @@ export default {
      */
     _onConferenceJoined() {
         APP.UI.initConference();
-        
+
         if (!config.disableShortcuts) {
             APP.keyboardshortcut.init();
         }
-        localStorage.setItem('boardArray','');
-        setTimeout(()=>{
+        localStorage.setItem('boardArray', '');
+        setTimeout(() => {
             APP.conference._addBoards('main');
-        },5000)
-        
+        }, 5000);
+
         APP.store.dispatch(conferenceJoined(room));
     },
 
@@ -3174,113 +3183,124 @@ export default {
 
         this._proxyConnection = null;
     },
-    _openWhiteboard(action)
-    { 
-       
+    _openWhiteboard(action) {
+
         var localParticipantIDs = getLocalParticipant(APP.store.getState());
         var localParticipantIDs = localParticipantIDs.id;
-        let conntrolMessage = new Object();
+        const conntrolMessage = new Object();
 
-        if(action== 'open') {
-               conntrolMessage.EventType = 1;
+        if (action == 'open') {
+            conntrolMessage.EventType = 1;
         } else {
-               conntrolMessage.EventType = 2;
+            conntrolMessage.EventType = 2;
         }
         conntrolMessage.userID = this.getMyUserId();
         conntrolMessage.Message = 'open board!!';
         conntrolMessage.FromParticipantID = localParticipantIDs;
-        let message = JSON.stringify( conntrolMessage );
+        const message = JSON.stringify(conntrolMessage);
+
         room.sendTextMessage(message);
-        
+
     },
-    _addBoards(boardname,secondMain=null,number=null) {
-        
-        
+    _addBoards(boardname, secondMain = null, number = null) {
+
+
         const localParticipantIDs = getLocalParticipant(APP.store.getState());
         const localParticipantID = localParticipantIDs.id;
         const conntrolMessage = {};
-        var BB;
-        
-        if(boardname=='main') {
-            if(secondMain == 'addnewMain') {
-                BB = localParticipantID+'-'+number;
-                boardarray.push(boardname+'-'+localParticipantID+'-'+number) ;
+        let BB;
+
+        if (boardname == 'main') {
+            if (secondMain == 'addnewMain') {
+                BB = `${localParticipantID}-${number}`;
+                boardarray.push(`${boardname}-${localParticipantID}-${number}`);
             } else {
                 BB = localParticipantID;
-                boardarray.push(boardname+'-'+localParticipantID) ;
+                boardarray.push(`${boardname}-${localParticipantID}`);
             }
-            
+
         } else {
             BB = boardname;
-            boardarray.push('participant-'+boardname) ;
+            boardarray.push(`participant-${boardname}`);
         }
         const Prole = APP.store.getState()['features/base/participants'][0].role;
-        var pushed= [];
+        const pushed = [];
+
         if (Prole === 'moderator') {
-            setInterval(()=>{
-                
-                var frame = document.getElementById('myId-'+BB);
-                if(frame.contentWindow !== null){
-                    var dd = {
-                        method:'showButton'
+            setInterval(() => {
+
+                const frame = document.getElementById(`myId-${BB}`);
+
+                if (frame.contentWindow !== null) {
+                    const dd = {
+                        method: 'showButton'
                     }
-                   // if (pushed.indexOf(BB) === -1) {
-                        console.log('here');
-                        frame.contentWindow.postMessage(dd,Board);
-                        var p = {
-                            method:'Role',
-                            isModerator:true
-                        }
-                        //frame.contentWindow.postMessage(p,"http://127.0.0.1:9002/");
-                        pushed.push(BB) ;
-                    //}
+;
+
+                    // if (pushed.indexOf(BB) === -1) {
+                    console.log('here');
+                    frame.contentWindow.postMessage(dd, Board);
+                    const p = {
+                        method: 'Role',
+                        isModerator: true
+                    }
+;
+
+                    // frame.contentWindow.postMessage(p,"http://127.0.0.1:9002/");
+                    pushed.push(BB);
+
+                    // }
                 }
-                
-            },2000)
-           
-           
+
+            }, 2000);
+
+
         }
-        localStorage.setItem('boardArray',boardarray);
-        conntrolMessage.EventType = 3
+        localStorage.setItem('boardArray', boardarray);
+        conntrolMessage.EventType = 3;
         conntrolMessage.userID = this.getMyUserId();
         conntrolMessage.Message = 'add boards!!';
         conntrolMessage.selectedarr = boardarray;
         conntrolMessage.FromParticipantID = localParticipantID;
         const message = JSON.stringify(conntrolMessage);
-        
+
 
         if (Prole === 'moderator') {
-            
+
             room.sendTextMessage(message);
         }
 
     },
     reload_iframes() {
-        var f_list = document.getElementsByTagName('iframe');
-     
-        for (var i = 0, f; f = f_list[i]; i++) {
+        const f_list = document.getElementsByTagName('iframe');
+
+        for (var f, i = 0; f = f_list[i]; i++) {
             f.src = f.src;
         }
     },
     loadIframe(iframeName, url) {
-        var $iframe = $('#' + iframeName);
+        const $iframe = $(`#${iframeName}`);
+
         if ($iframe.length) {
-            $iframe.attr('src',url);
+            $iframe.attr('src', url);
+
             return false;
         }
+
         return true;
     },
-    _stopCollab(data)
-    { 
+    _stopCollab(data) {
         var localParticipantIDs = getLocalParticipant(APP.store.getState());
         var localParticipantIDs = localParticipantIDs.id;
-        let conntrolMessage = new Object();
+        const conntrolMessage = new Object();
+
         conntrolMessage.EventType = 4;
         conntrolMessage.data = data;
         conntrolMessage.userID = this.getMyUserId();
         conntrolMessage.Message = 'stop/start Collab!!';
         conntrolMessage.FromParticipantID = localParticipantIDs;
-        let message = JSON.stringify( conntrolMessage );
+        const message = JSON.stringify(conntrolMessage);
+
         room.sendTextMessage(message);
-    },
+    }
 };

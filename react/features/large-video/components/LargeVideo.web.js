@@ -232,7 +232,7 @@ class LargeVideo extends Component<Props> {
         var splitname = d.split("-");
         var dn = e.target.getAttribute("data-name");
         $('#white-board').children('iframe').hide();
-        //APP.conference.loadIframe('myId-'+splitname[1],'https://meet2-board.acktechnologies.com/whiteboard/'+d);
+        //APP.conference.loadIframe('myId-'+splitname[1],'https://meet.ourtrial.com/whiteboard/'+d);
         if(splitname[2]!==undefined){
             $('#myId-'+splitname[1]+'-'+splitname[2]).show();
         } else {
@@ -298,7 +298,7 @@ class LargeVideo extends Component<Props> {
                         height = '100%'
                         id = 'myId'
                         position = 'relative'
-                        url = { 'https://meet2-board.acktechnologies.com/whiteboard/'+APP.conference.roomName+'-MainBoard1'}
+                        url = { 'https://meet.ourtrial.com/whiteboard/'+APP.conference.roomName+'-MainBoard1'}
                         width = '100%' /> */}
                     {this.state.selecteitems.map(this.renderItemIframes)}
                 </div>

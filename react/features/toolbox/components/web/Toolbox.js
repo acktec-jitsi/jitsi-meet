@@ -1320,11 +1320,11 @@ class Toolbox extends Component<Props> {
                     tooltip = { t(`${this.state._whiteboard  ?  t('Whiteboard') : t('Whiteboard')}`) } />)
                  : overflowMenuAdditionalButtons.push(<OverflowMenuItem
                     accessibilityLabel = { t('Whiteboard') }
-                    icon = { IconRaisedHand }
-                    key = 'raisehand'
-                    onClick = { this._onToolbarToggleRaiseHand }
+                    icon = { this.state._whiteboard ? IconWhiteBoard : IconWhiteBoard }
+                    key = 'whiteboard'
+                    onClick = { this._onTogglerWhiteBoard }
                     text = { t(`${this.state._whiteboard  ?  t('Whiteboard') : t('Whiteboard')}`) } />);
-            } else {
+	    } else {
                     buttons.has('raisehand')
                     ? mainMenuAdditionalButtons.push(<ToolbarButton
                         accessibilityLabel = { t('Whiteboard') }
@@ -1335,11 +1335,11 @@ class Toolbox extends Component<Props> {
                         tooltip = { t(`${this.state._whiteboard  ?  t('Whiteboard') : t('Whiteboard')}`) } />)
                     : overflowMenuAdditionalButtons.push(<OverflowMenuItem
                         accessibilityLabel = { t('Whiteboard') }
-                        icon = { IconRaisedHand }
-                        key = 'raisehand'
-                        onClick = { this._onToolbarToggleRaiseHandP }
+                        icon = { this.state._whiteboard ? IconWhiteBoard : IconWhiteBoard }
+                        key = 'whiteboard'
+                        onClick = { this._onTogglerWhiteBoard }
                         text = { t(`${this.state._whiteboard  ?  t('Whiteboard') : t('Whiteboard')}`) } />);
-            }
+	    }
         }
         // <ToolbarButton	
         //         accessibilityLabel = { t('Open whiteboard') }	
