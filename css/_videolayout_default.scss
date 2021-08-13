@@ -733,7 +733,7 @@
     width: 100%;
     background: #ffffff82;
     height:calc(100vh - 105px);
-    width:calc(100% - 32px);
+    width:calc(100% - 165px);
     left: 15px;
     iframe {
         border: none
@@ -816,15 +816,14 @@
     }
   }
 
-//   @media screen and (max-width: 600px){
-//     div.white-board{
-//         width: calc(100% - 32px);
-//     }
-    // div.whiteboard-list{
-    //     width: 100px;
-    //     right: 0px;
-    // }
-//   }
+  @media screen and (max-width: 600px){
+    div.white-board{
+        height: 50% !important;
+        width: 90% !important;
+        left: 5%;
+        top: 0%;
+    }
+  }
 
   .slide-left{
     -webkit-animation: slide 0.5s forwards;
